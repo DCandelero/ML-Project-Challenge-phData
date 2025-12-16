@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: housing-ml-api
+    ports:
+      - "8000:8000"
+    environment:
+      - LOG_LEVEL=info
+      - MODEL_VERSION=v1
+      - MODEL_PATH=model/model.pkl
+      - FEATURES_PATH=model/model_features.json
+      - DEMOGRAPHICS_PATH=data/zipcode_demographics.csv
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    volumes:
+      # Mount code for development (hot reload)
+      - ./app:/app/app
+      - ./ml:/app/ml
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - housing-network
+
+networks:
+  housing-network:
+    driver: bridge

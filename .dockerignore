@@ -1,0 +1,63 @@
+# Exclude from Docker image to reduce size
+
+# Large training data (not needed in API container)
+data/kc_house_data.csv
+data/future_unseen_examples.csv
+
+# Test files
+tests/
+scripts/
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Documentation
+Documents/
+*.md
+!README.md
+
+# Conda environment
+conda_environment.yml
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Distribution
+dist/
+build/
+*.egg-info/
