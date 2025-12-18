@@ -12,6 +12,8 @@ class PredictionResponse(BaseModel):
     zipcode: str = Field(..., description="Property zipcode")
     demographics_found: bool = Field(..., description="Whether demographics were found")
     prediction_timestamp: str = Field(..., description="ISO 8601 timestamp")
+    minimal_request: Optional[bool] = Field(None, description="True if minimal endpoint was used")
+    defaults_used: Optional[int] = Field(None, description="Number of features set to defaults (minimal endpoint)")
 
     class Config:
         json_schema_extra = {

@@ -48,3 +48,30 @@ class HouseFeaturesRequest(BaseModel):
                 "sqft_lot15": 6380
             }
         }
+
+
+class MinimalFeaturesRequest(BaseModel):
+    """Minimal request model - only 8 essential features (BONUS endpoint)."""
+
+    bedrooms: int = Field(..., ge=0, le=33, description="Number of bedrooms")
+    bathrooms: float = Field(..., ge=0, le=10, description="Number of bathrooms")
+    sqft_living: int = Field(..., gt=0, description="Square feet of living space")
+    sqft_lot: int = Field(..., gt=0, description="Square feet of lot")
+    floors: float = Field(..., ge=1, le=3.5, description="Number of floors")
+    sqft_above: int = Field(..., ge=0, description="Square feet above ground")
+    sqft_basement: int = Field(..., ge=0, description="Square feet of basement")
+    zipcode: str = Field(..., pattern=r'^\d{5}$', description="5-digit zipcode")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "bedrooms": 3,
+                "bathrooms": 2.5,
+                "sqft_living": 2220,
+                "sqft_lot": 6380,
+                "floors": 1.5,
+                "sqft_above": 1660,
+                "sqft_basement": 560,
+                "zipcode": "98115"
+            }
+        }

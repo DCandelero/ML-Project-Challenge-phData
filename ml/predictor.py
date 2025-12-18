@@ -1,9 +1,10 @@
 """Prediction orchestration service."""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from ml.model_loader import ModelService
 from ml.demographics_service import DemographicsService, ZipcodeNotFoundError
 from ml.preprocessor import FeaturePreprocessor
+from ml.feature_defaults import FeatureDefaultsService
 
 
 class PredictionService:
@@ -13,7 +14,8 @@ class PredictionService:
         self,
         model_service: ModelService,
         demographics_service: DemographicsService,
-        preprocessor: FeaturePreprocessor
+        preprocessor: FeaturePreprocessor,
+        feature_defaults: Optional[FeatureDefaultsService] = None
     ):
         """Initialize prediction service with dependencies.
 
@@ -21,10 +23,12 @@ class PredictionService:
             model_service: Service for model loading and prediction
             demographics_service: Service for demographics lookup
             preprocessor: Service for feature preprocessing
+            feature_defaults: Optional service for feature defaults (minimal endpoint)
         """
         self.model_service = model_service
         self.demographics_service = demographics_service
         self.preprocessor = preprocessor
+        self.feature_defaults = feature_defaults
 
     def predict_price(self, house_features: Dict[str, Any]) -> Dict[str, Any]:
         """Predict house price from house features.
@@ -76,3 +80,41 @@ class PredictionService:
             'demographics_found': True,
             'model_version': 'v1'
         }
+
+    def predict_price_minimal(self, minimal_features: Dict[str, Any]) -> Dict[str, Any]:
+        """Predict price from minimal features (8 fields).
+
+        This method:
+        1. Expands minimal features to full features using defaults
+        2. Calls predict_price with expanded features
+        3. Adds metadata about defaults used
+
+        Args:
+            minimal_features: Dictionary with 8 essential features:
+                - bedrooms, bathrooms, sqft_living, sqft_lot, floors
+                - sqft_above, sqft_basement, zipcode
+
+        Returns:
+            Dictionary with prediction and metadata, including:
+            - All fields from predict_price()
+            - minimal_request: True
+            - defaults_used: 10 (number of features set to defaults)
+
+        Raises:
+            ValueError: If feature defaults service not configured
+            ZipcodeNotFoundError: If zipcode not in demographics data
+        """
+        if not self.feature_defaults:
+            raise ValueError("Feature defaults service not configured for minimal predictions")
+
+        # Expand minimal to full features using defaults
+        full_features = self.feature_defaults.expand_minimal_features(minimal_features)
+
+        # Use existing prediction logic
+        result = self.predict_price(full_features)
+
+        # Add metadata about minimal request
+        result['minimal_request'] = True
+        result['defaults_used'] = 10  # Number of features that were defaulted
+
+        return result

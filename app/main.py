@@ -9,6 +9,7 @@ from ml.model_loader import ModelService
 from ml.demographics_service import DemographicsService
 from ml.preprocessor import FeaturePreprocessor
 from ml.predictor import PredictionService
+from ml.feature_defaults import FeatureDefaultsService
 
 
 # Configure logging
@@ -22,8 +23,8 @@ logger = logging.getLogger("housing.api")
 
 # FastAPI app
 app = FastAPI(
-    title="Sound Realty ML API",
-    description="REST API for predicting house prices in Seattle area",
+    title="Housing ML API",
+    description="REST API for predicting house prices in Seattle area. Supports full predictions (18 features) and minimal predictions (8 features).",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -59,11 +60,16 @@ async def startup_event():
         # Create preprocessor
         preprocessor = FeaturePreprocessor(model_service.get_features())
 
+        # Create feature defaults service (for minimal endpoint)
+        feature_defaults_service = FeatureDefaultsService(demographics_service)
+        logger.info("Feature defaults service initialized")
+
         # Create prediction service
         prediction_service = PredictionService(
             model_service,
             demographics_service,
-            preprocessor
+            preprocessor,
+            feature_defaults_service
         )
 
         # Set prediction service in the predict module
@@ -124,7 +130,10 @@ async def readiness_check():
 
 @app.get("/api/v1/model/info")
 async def model_info():
-    """Get model metadata."""
+    """Get model metadata including evaluation metrics."""
+    import json
+    from pathlib import Path
+
     prediction_service = predict.get_prediction_service()
 
     if prediction_service is None:
@@ -132,12 +141,35 @@ async def model_info():
 
     model_info = prediction_service.model_service.get_model_info()
 
-    return {
+    # Load evaluation metrics if they exist
+    metrics_path = Path("model/evaluation_metrics.json")
+    evaluation_metrics = {}
+    cross_validation = {}
+
+    if metrics_path.exists():
+        try:
+            with open(metrics_path) as f:
+                metrics_data = json.load(f)
+                evaluation_metrics = metrics_data.get('test_set_metrics', {})
+                cross_validation = metrics_data.get('cross_validation', {})
+        except Exception as e:
+            logger.warning(f"Failed to load evaluation metrics: {e}")
+
+    response = {
         "model_version": settings.model_version,
         "model_type": model_info.get('model_type'),
         "features": prediction_service.model_service.get_features(),
         "feature_count": model_info.get('feature_count')
     }
+
+    # Add metrics if available
+    if evaluation_metrics:
+        response["evaluation_metrics"] = evaluation_metrics
+
+    if cross_validation:
+        response["cross_validation"] = cross_validation
+
+    return response
 
 
 # Register routers
