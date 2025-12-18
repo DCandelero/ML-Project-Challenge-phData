@@ -58,9 +58,9 @@ dmypy.json
 .ruff_cache/
 bandit-report.json
 
-# Jupyter Notebook
-.ipynb_checkpoints/
-*.ipynb
+# # Jupyter Notebook
+# .ipynb_checkpoints/
+# *.ipynb
 
 # macOS
 .DS_Store
@@ -76,3 +76,4 @@ Desktop.ini
 model/*
 data/*
 Documents/*
+notebooks
