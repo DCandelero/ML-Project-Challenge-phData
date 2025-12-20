@@ -1,8 +1,15 @@
 """Pytest fixtures for testing"""
 
+import os
 import pytest
 import pandas as pd
 from fastapi.testclient import TestClient
+
+# Set test environment to use fixtures
+os.environ["DEMOGRAPHICS_PATH"] = "tests/fixtures/zipcode_demographics.csv"
+os.environ["MODEL_VERSION"] = "v1"
+os.environ["MODEL_PATH"] = "tests/fixtures/v1/model.pkl"
+os.environ["FEATURES_PATH"] = "tests/fixtures/v1/model_features.json"
 
 
 @pytest.fixture
@@ -77,15 +84,17 @@ def api_client():
 def demographics_service():
     """Demographics service for testing"""
     from ml.demographics_service import DemographicsService
-    return DemographicsService("data/zipcode_demographics.csv")
+    return DemographicsService("tests/fixtures/zipcode_demographics.csv")
 
 
 @pytest.fixture
 def model_service():
-    """Model service for testing (uses v1 by default)"""
+    """Model service for testing (uses v1 fixtures)"""
     from ml.model_loader import ModelService
-    from app.config import settings
-    return ModelService(settings.model_path, settings.features_path)
+    return ModelService(
+        "tests/fixtures/v1/model.pkl",
+        "tests/fixtures/v1/model_features.json"
+    )
 
 
 @pytest.fixture
