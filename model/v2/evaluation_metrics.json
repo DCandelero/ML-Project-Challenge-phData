@@ -1,0 +1,17 @@
+{
+  "model_version": "v2",
+  "model_type": "RandomForestRegressor",
+  "test_set_metrics": {
+    "rmse": 163176.24959644384,
+    "mae": 80927.80178956785,
+    "r2": 0.8220007266402922,
+    "mape": 0.14682121486449703
+  },
+  "training_metrics": {
+    "rmse": 93794.22844068565
+  },
+  "overfitting_ratio": 1.739725911809537,
+  "evaluation_date": "2025-12-18T11:11:39.695917",
+  "total_features": 46,
+  "engineered_features_count": 9
+}
