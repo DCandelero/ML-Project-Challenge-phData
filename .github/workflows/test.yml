@@ -1,0 +1,61 @@
+name: Test Suite
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t housing-ml-api:test .
+
+      - name: Start API container
+        run: |
+          docker run -d \
+            --name housing-api-test \
+            -p 8000:8000 \
+            -e LOG_LEVEL=info \
+            -e MODEL_VERSION=v1 \
+            housing-ml-api:test
+
+      - name: Wait for API to be ready
+        run: |
+          echo "Waiting for API to be healthy..."
+          for i in {1..30}; do
+            if curl -f http://localhost:8000/health > /dev/null 2>&1; then
+              echo "API is healthy!"
+              exit 0
+            fi
+            echo "Attempt $i: API not ready yet..."
+            sleep 2
+          done
+          echo "API failed to become healthy"
+          docker logs housing-api-test
+          exit 1
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+          cache: 'pip'
+
+      - name: Install test dependencies
+        run: pip install requests pandas
+
+      - name: Run API tests
+        run: python scripts/test_client.py
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker logs housing-api-test
+
+      - name: Stop container
+        if: always()
+        run: docker stop housing-api-test && docker rm housing-api-test

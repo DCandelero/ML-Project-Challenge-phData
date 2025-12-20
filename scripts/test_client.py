@@ -26,6 +26,9 @@ def load_test_examples(n=100):
     """Load test examples from CSV"""
     try:
         df = pd.read_csv("data/future_unseen_examples.csv", nrows=n)
+        # Convert zipcode to string (API expects string, not int)
+        if 'zipcode' in df.columns:
+            df['zipcode'] = df['zipcode'].astype(str)
         print(f"✓ Loaded {len(df)} test examples from future_unseen_examples.csv")
         return df.to_dict('records')
     except FileNotFoundError:
@@ -85,12 +88,24 @@ def test_prediction(house: Dict[str, Any], endpoint="/api/v1/predict"):
                 'defaults_used': result.get('defaults_used', 0)
             }
         else:
+            # Handle different error formats (list, dict, or string)
+            error_detail = response.json().get('detail', 'Unknown error')
+            if isinstance(error_detail, list) and len(error_detail) > 0:
+                # Pydantic validation errors - extract first error message
+                first_error = error_detail[0]
+                error_msg = first_error.get('msg', str(first_error))
+            elif isinstance(error_detail, dict):
+                error_msg = str(error_detail)
+            else:
+                error_msg = str(error_detail)
+            
             return {
                 'success': False,
                 'prediction': None,
                 'zipcode': house.get('zipcode'),
                 'duration_ms': duration,
-                'error': response.json().get('detail', 'Unknown error')
+                'error': error_msg,
+                'error_detail': error_detail  # Keep full detail for debugging
             }
     except Exception as e:
         duration = (time.time() - start_time) * 1000
@@ -273,7 +288,12 @@ def main():
         print(f"  Common errors:")
         error_counts = {}
         for r in batch_failed:
-            error = r['error'][:50] if r['error'] else 'Unknown'
+            # Extract error message (handle string, list, or dict)
+            error = r.get('error', 'Unknown')
+            if isinstance(error, (list, dict)):
+                error = str(error)[:50]
+            else:
+                error = str(error)[:50] if error else 'Unknown'
             error_counts[error] = error_counts.get(error, 0) + 1
         for error, count in sorted(error_counts.items(), key=lambda x: -x[1])[:3]:
             print(f"    - {error}: {count} occurrences")
@@ -291,7 +311,8 @@ def main():
         print(f"  Average response time: {sum(batch_durations)/len(batch_durations):.0f}ms")
         print(f"  Min response time:     {min(batch_durations):.0f}ms")
         print(f"  Max response time:     {max(batch_durations):.0f}ms")
-        print(f"  p95 response time:     {sorted(batch_durations)[int(len(batch_durations)*0.95)]:.0f}ms")
+        if len(batch_durations) > 0:
+            print(f"  p95 response time:     {sorted(batch_durations)[int(len(batch_durations)*0.95)]:.0f}ms")
 
     # Test error handling
     test_invalid_zipcode()
@@ -311,7 +332,9 @@ def main():
     print(f"  Full predictions: {len(batch_successful)}/{len(batch_results)} successful")
     print(f"  Error handling: PASSED")
     print(f"  Minimal endpoint: PASSED")
-    print(f"  Performance: Average {sum(batch_durations)/len(batch_durations):.0f}ms per prediction")
+    if batch_successful:
+        batch_durations = [r['duration_ms'] for r in batch_successful]
+        print(f"  Performance: Average {sum(batch_durations)/len(batch_durations):.0f}ms per prediction")
     print("\n" + "="*60)
 
 

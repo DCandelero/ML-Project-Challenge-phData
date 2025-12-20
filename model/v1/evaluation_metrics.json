@@ -1,0 +1,30 @@
+{
+  "model_version": "v1",
+  "model_type": "KNeighborsRegressor",
+  "test_set_metrics": {
+    "rmse": 201679.9015208933,
+    "mae": 102066.52257586972,
+    "r2": 0.728087247439823,
+    "mape": 0.1790708129867057
+  },
+  "training_metrics": {
+    "rmse": 143467.08188603626
+  },
+  "cross_validation": {
+    "cv_folds": 5,
+    "rmse_mean": 184893.14375690924,
+    "rmse_std": 14191.47208716925,
+    "rmse_scores": [
+      209929.95319348352,
+      173897.85349016736,
+      177991.6897470803,
+      171676.0693376455,
+      190970.15301616956
+    ]
+  },
+  "overfitting_ratio": 1.4057573268347274,
+  "evaluation_date": "2025-12-15T23:39:07.358124",
+  "test_set_size": 5404,
+  "training_set_size": 16209,
+  "total_features": 33
+}

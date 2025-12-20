@@ -1,0 +1,186 @@
+[
+  {
+    "feature": "sqft_living",
+    "importance": 0.16488779118429023
+  },
+  {
+    "feature": "grade",
+    "importance": 0.09651492962865264
+  },
+  {
+    "feature": "sqft_above",
+    "importance": 0.09409234121138114
+  },
+  {
+    "feature": "hous_val_amt",
+    "importance": 0.06505730523121793
+  },
+  {
+    "feature": "bathrooms",
+    "importance": 0.04957531279980067
+  },
+  {
+    "feature": "medn_incm_per_prsn_amt",
+    "importance": 0.04936577944314563
+  },
+  {
+    "feature": "quality_score",
+    "importance": 0.04920507483026987
+  },
+  {
+    "feature": "per_prfsnl",
+    "importance": 0.04691250571535858
+  },
+  {
+    "feature": "per_bchlr",
+    "importance": 0.03590084900450661
+  },
+  {
+    "feature": "per_hsd",
+    "importance": 0.031627498924628204
+  },
+  {
+    "feature": "total_rooms",
+    "importance": 0.030845237471824896
+  },
+  {
+    "feature": "sqft_lot",
+    "importance": 0.022435789410349335
+  },
+  {
+    "feature": "bath_per_bed",
+    "importance": 0.021423137449372427
+  },
+  {
+    "feature": "sqft_basement",
+    "importance": 0.018892268577255903
+  },
+  {
+    "feature": "edctn_prfsnl_qty",
+    "importance": 0.018535587645099525
+  },
+  {
+    "feature": "edctn_high_schl_qty",
+    "importance": 0.01699444739409449
+  },
+  {
+    "feature": "yr_built",
+    "importance": 0.014161413543124508
+  },
+  {
+    "feature": "house_age",
+    "importance": 0.013700964005687107
+  },
+  {
+    "feature": "living_to_lot_ratio",
+    "importance": 0.013698756471143013
+  },
+  {
+    "feature": "edctn_9_12_qty",
+    "importance": 0.01343274189513001
+  },
+  {
+    "feature": "per_9_to_12",
+    "importance": 0.011909506001804092
+  },
+  {
+    "feature": "edctn_less_than_9_qty",
+    "importance": 0.011477778436053927
+  },
+  {
+    "feature": "basement_pct",
+    "importance": 0.010183182610438189
+  },
+  {
+    "feature": "per_less_than_9",
+    "importance": 0.009911288797824064
+  },
+  {
+    "feature": "edctn_bchlr_dgre_qty",
+    "importance": 0.008864084630882311
+  },
+  {
+    "feature": "bedrooms",
+    "importance": 0.0083574597770083
+  },
+  {
+    "feature": "floors",
+    "importance": 0.006482651473618736
+  },
+  {
+    "feature": "edctn_some_clg_qty",
+    "importance": 0.006276624630659205
+  },
+  {
+    "feature": "medn_hshld_incm_amt",
+    "importance": 0.0062240416565313254
+  },
+  {
+    "feature": "edctn_assoc_dgre_qty",
+    "importance": 0.006200030583715483
+  },
+  {
+    "feature": "ppltn_qty",
+    "importance": 0.006031652691296916
+  },
+  {
+    "feature": "per_some_clg",
+    "importance": 0.005701553063751796
+  },
+  {
+    "feature": "urbn_ppltn_qty",
+    "importance": 0.004642077417752865
+  },
+  {
+    "feature": "condition",
+    "importance": 0.0038627399843354044
+  },
+  {
+    "feature": "years_since_renovation",
+    "importance": 0.003783906138622879
+  },
+  {
+    "feature": "per_assoc",
+    "importance": 0.003780319893116605
+  },
+  {
+    "feature": "has_basement",
+    "importance": 0.0036817562000455613
+  },
+  {
+    "feature": "per_urbn",
+    "importance": 0.0033742870116299523
+  },
+  {
+    "feature": "is_renovated",
+    "importance": 0.002945535069020991
+  },
+  {
+    "feature": "per_non_farm",
+    "importance": 0.0028901470793750352
+  },
+  {
+    "feature": "non_farm_qty",
+    "importance": 0.0026762216673644375
+  },
+  {
+    "feature": "yr_renovated",
+    "importance": 0.0026569342033927186
+  },
+  {
+    "feature": "farm_ppltn_qty",
+    "importance": 0.000666556205099054
+  },
+  {
+    "feature": "per_farm",
+    "importance": 7.387836587265586e-05
+  },
+  {
+    "feature": "per_sbrbn",
+    "importance": 6.313430838377816e-05
+  },
+  {
+    "feature": "sbrbn_ppltn_qty",
+    "importance": 2.292026607099804e-05
+  }
+]

@@ -73,7 +73,5 @@ ehthumbs.db
 Desktop.ini
 
 # Others
-model/*
-data/*
 Documents/*
 notebooks

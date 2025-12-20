@@ -7,21 +7,63 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture
 def sample_demographics():
-    """Sample demographics data for testing"""
+    """Sample demographics data for testing (all 26 columns)"""
     return {
-        '98115': {
-            'ppltn_qty': 43263.0,
-            'medn_hshld_incm_amt': 58475.0,
-            'hous_val_amt': 412345.0,
-            'per_urbn': 98.5,
-            'per_bchlr': 45.2
-        },
         '98042': {
             'ppltn_qty': 38249.0,
+            'urbn_ppltn_qty': 37394.0,
+            'sbrbn_ppltn_qty': 0.0,
+            'farm_ppltn_qty': 0.0,
+            'non_farm_qty': 855.0,
             'medn_hshld_incm_amt': 66051.0,
-            'hous_val_amt': 458900.0,
-            'per_urbn': 85.3,
-            'per_bchlr': 32.1
+            'medn_incm_per_prsn_amt': 25219.0,
+            'hous_val_amt': 192000.0,
+            'edctn_less_than_9_qty': 437.0,
+            'edctn_9_12_qty': 2301.0,
+            'edctn_high_schl_qty': 7135.0,
+            'edctn_some_clg_qty': 7787.0,
+            'edctn_assoc_dgre_qty': 2202.0,
+            'edctn_bchlr_dgre_qty': 4964.0,
+            'edctn_prfsnl_qty': 1783.0,
+            'per_urbn': 97.0,
+            'per_sbrbn': 0.0,
+            'per_farm': 0.0,
+            'per_non_farm': 2.0,
+            'per_less_than_9': 1.0,
+            'per_9_to_12': 6.0,
+            'per_hsd': 18.0,
+            'per_some_clg': 20.0,
+            'per_assoc': 5.0,
+            'per_bchlr': 12.0,
+            'per_prfsnl': 4.0
+        },
+        '98115': {
+            'ppltn_qty': 43263.0,
+            'urbn_ppltn_qty': 42500.0,
+            'sbrbn_ppltn_qty': 763.0,
+            'farm_ppltn_qty': 0.0,
+            'non_farm_qty': 0.0,
+            'medn_hshld_incm_amt': 58475.0,
+            'medn_incm_per_prsn_amt': 35000.0,
+            'hous_val_amt': 412345.0,
+            'edctn_less_than_9_qty': 500.0,
+            'edctn_9_12_qty': 2500.0,
+            'edctn_high_schl_qty': 8000.0,
+            'edctn_some_clg_qty': 8500.0,
+            'edctn_assoc_dgre_qty': 2500.0,
+            'edctn_bchlr_dgre_qty': 19550.0,
+            'edctn_prfsnl_qty': 1713.0,
+            'per_urbn': 98.5,
+            'per_sbrbn': 1.5,
+            'per_farm': 0.0,
+            'per_non_farm': 0.0,
+            'per_less_than_9': 1.0,
+            'per_9_to_12': 6.0,
+            'per_hsd': 18.0,
+            'per_some_clg': 20.0,
+            'per_assoc': 6.0,
+            'per_bchlr': 45.2,
+            'per_prfsnl': 4.0
         }
     }
 
@@ -82,10 +124,12 @@ def demographics_service():
 
 @pytest.fixture
 def model_service():
-    """Model service for testing (uses v1 by default)"""
+    """Model service for testing (uses v1 model)"""
     from ml.model_loader import ModelService
-    from app.config import settings
-    return ModelService(settings.model_path, settings.features_path)
+    return ModelService(
+        "model/v1/model.pkl",
+        "model/v1/model_features.json"
+    )
 
 
 @pytest.fixture

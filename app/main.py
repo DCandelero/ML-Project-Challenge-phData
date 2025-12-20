@@ -101,6 +101,14 @@ async def log_requests(request, call_next):
     return response
 
 
+# Root endpoint
+@app.get("/")
+async def root():
+    """Redirect to API documentation."""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/docs")
+
+
 # Health check endpoints
 @app.get("/health")
 async def health_check():
